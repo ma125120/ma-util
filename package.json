@@ -1,0 +1,16 @@
+{
+  "name": "ma-util",
+  "version": "0.0.0",
+  "description": "js函数式编程",
+  "main": "src/index.js",
+  "author": "马鹏达",
+  "license": "MIT",
+  "private": true,
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/ma125120/ma-util.git"
+  },
+  "keywords": [
+    "js函数式编程"
+  ]
+}
