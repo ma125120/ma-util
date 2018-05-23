@@ -1,0 +1,33 @@
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>函数式编程</title>
+</head>
+<body>
+  <script type="module">
+    import { compose, curry, Maybe, IO, split,map,prop,setProp,head,last } from '../src/index.js'
+    var str = "test=213&sd=exec",
+        obj = {},
+        emptyObject = function() { return {} };
+    var toArr = compose(split("&"),map(split("=")));
+    var toObj = compose(map((v)=>setProp(v[0],v[1],obj)),head)(toArr(str))
+    console.log(last(null))
+    
+    // var toArray = function(obj) {
+    //   return [].slice.call(obj)
+    // }
+    // var els = toArray(document.querySelectorAll("#artContent b,#artContent p")),
+    //     str = "";
+    // els.map(el=>{
+    //   str += el.textContent + "\n";
+    // });
+    // var xhr = new XMLHttpRequest();
+    // xhr.open('POST', 'https://localhost:8443',false);
+    // xhr.setRequestHeader("Content-type","application/json");
+    // var data = JSON.stringify({ str1: str });
+    // xhr.send(data);
+  </script>
+</body>
+</html>
