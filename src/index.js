@@ -7,7 +7,8 @@ import {
   getRandomName,
 	toFormData,
 	strToObject,
-	validateData
+	validateData,
+	ObjectToArray
 } from './object.js'
 
 import {
@@ -21,64 +22,33 @@ import {
   Right
 } from './Either.js'
 
-var curry = function (fn,arity=fn.length) {
-	return _curry(fn,arity);
-}
-var _curry = function _curry(fn,arity=fn.length,...args) {
-	var argLen = args.length;
-	if(argLen < arity) {
-		return _curry.bind(null,fn,arity,...args);
-	} else {
-		return fn(...args);
-	}
-}
+import {
+	setStoreData,
+	curry,
+	compose,
+	composeRight,
+	toUpper,
+	head,
+	last,
+	isExist,
+	map,
+	filter,
+	prop,
+	setProp,
+	split,
+	assign,
+	join,
+	log,
+	chain,
+	id,
+	then,
+	ap,
+	add,
+	_add,
+	reduce,
+	match,
+} from './util.js'
 
-var compose = (...fns) =>{
-	var [firstFn,...nestFn] = fns;
-	return x=>nestFn.reduce((f,g)=>g(f),firstFn(x));
-}
-var composeRight = (...fns) =>{
-	var nestFn = fns.slice(0,-1),
-			lastFn = fns.slice(-1);
-	return x=>fns.reduceRight((f,g)=>g(f),lastFn(x));
-}
-var toUpper = curry(function(str) {
-	return str.toUpperCase();
-})
-var sureReturn = function(data,fn) {
-	return isNull(data) ? (Left.of(data)) : (fn());
-}
-var isNull = curry(function(data) {
-	return data === null; 
-})
-var isExist = curry(function(str) {
-	return str !== undefined 
-})
-var prop = curry(function(prop,data) {
-	return data[prop]
-});
-var setProp = curry(function(prop,value,data) {
-	data[prop] = value;
-	return data;
-});
-var map = curry(function(f,data) {
-  return data.map(f)
-});
-var filter = curry(function(f,data) {
-  return data.filter(f)
-});
-var split = curry(function(str,data) {
-	return sureReturn(data, ()=>(isExist(data && data.split) ? (data.split(str)) : (Left.of(data))))
-});
-var head = curry(function(data) {
-  return isNull(data) ? (Left.of(data)) : (data[0]);
-});
-var last = curry(function(data) {
-	return sureReturn(data, ()=>(isExist(data && data.split) ? (data.slice(-1)) : (Left.of(data))))
-});
-var eq = curry(function(key,data) {
-  return key == data
-});
 
 
 // compose(addStr,first,toUpper)("this is a low")
@@ -104,13 +74,17 @@ Maybe.prototype.isNothing = function() {
 Maybe.prototype.map = function(f) {
   return this.isNothing() ? Maybe.of(null) : Maybe.of(f(this.__value));
 }
+Maybe.prototype.join = function() {
+  return this.isNothing() ? Maybe.of(null) : this.__value;
+}
+
 var withdraw = curry(function(amount, account) {
   return account.balance >= amount ?
     Maybe.of({balance: account.balance - amount}) :
-    Maybe.of(null);
+    Left.of(`当前余额为${account.balance},不足以支付${amount}`);
 });
 var getRemain = compose(withdraw(20),map(prop('balance')));
-getRemain({ balance: 200.00})
+console.log(getRemain({ balance: 10.00}).__value)
 
 export {
 	isArray,
@@ -122,6 +96,7 @@ export {
 	toFormData,
 	strToObject,
 	validateData,
+	ObjectToArray,
 	
 	curry,
 	compose,
@@ -135,9 +110,22 @@ export {
 	prop,
 	setProp,
 	split,
-	Maybe,
+	assign,
+	join,
+	log,
+	chain,
+	id,
+	then,
+	ap,
+	add,
+	_add,
+	reduce,
+	match,
 
 	insertArray,
+	Maybe,
+	Left,
+	Right,
 
 	IO
 

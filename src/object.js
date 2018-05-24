@@ -126,5 +126,6 @@ export {
   getRandomName,
   toFormData,
 	strToObject,
-	validateData
+	validateData,
+	ObjectToArray
 }

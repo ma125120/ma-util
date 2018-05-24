@@ -6,14 +6,75 @@
   <title>函数式编程</title>
 </head>
 <body>
+  <input type="text" class="username" value="sdada">
+  <input type="text" class="password" value="125120">
   <script type="module">
-    import { compose, curry, Maybe, IO, split,map,prop,setProp,head,last } from '../src/index.js'
+    import { compose, curry, Maybe, IO,Left,Right, split,map,prop,setProp,head,last,assign,join,log,ObjectToArray,chain,id,then,ap,add,_add,match } from '../src/index.js'
     var str = "test=213&sd=exec",
-        obj = {},
+        obj = {
+          color: 'red'
+        },
         emptyObject = function() { return {} };
-    var toArr = compose(split("&"),map(split("=")));
-    var toObj = compose(map((v)=>setProp(v[0],v[1],obj)),head)(toArr(str))
-    console.log(last(null))
+    var arr = [{
+      id: 1,
+      title:'测试1'
+    },{
+      id:2,
+      title: '测试2'
+    }];
+    
+    function getItem() {
+      return new IO(function() {
+        return { color: 'red' }
+      })
+    }
+    var applyPreferences = compose(
+      getItem,chain(id),prop('color')
+    )();
+
+    var addToMailingList = (function(list){
+      return function(email) {
+        return new IO(function(){
+          list.push(email);
+          return list;
+        });
+      }
+    })([]);
+
+    function emailBlast(list) {
+      return new IO(function(){
+        return 'emailed: ' + list.join(',');
+      });
+    }
+
+    var validateEmail = function(x){
+      return x.match(/\S+@\S+\.\S+/) ? (new Right(x)) : (new Left('invalid email'));
+    }
+
+    //  ex4 :: Email -> Either String (IO String)
+    var ex4 = compose(
+      validateEmail,chain(addToMailingList),chain(emailBlast),join
+    );
+    var ex5 = map(ex4,['12512085@qq.com','1418205177@qq.com']);
+    ex5 = ex4('1346456@qq.com')
+
+
+    // var add3 = curry(_add,3)
+    // var num = compose(
+    //   add3(2),ap(Right.of(5)),join,log
+    // )(4);
+
+    compose(
+      split('dsa'),log,join,log
+    )('test')
+    
+
+    // querySelector(".username").chain(function(uname) {
+    //   return querySelector(".password").chain(function(pwd) {
+    //     return `${uname.value} ${pwd.value}`
+    //   })
+    // })
+    
     
     // var toArray = function(obj) {
     //   return [].slice.call(obj)
