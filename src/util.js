@@ -106,7 +106,7 @@ var eq = curry(function(key,data) {
   return key == data
 });
 var join = function(data){
-	return sureReturn(data, ()=>(isExist(data && data.join) ? (data.join()) : Left.of(`该值不存在join方法`)))
+	return sureReturn(data, ()=>(isExist(data && data.join) ? (data.join()) : data))
 }
 var assign = curry(function(data) {
 	return sureReturn(data,()=> ( isArray(data) ? ([...data]) : (isObject(data) ? (Object.assign({},data)) : (data) ) ) )
