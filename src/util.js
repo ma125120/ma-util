@@ -1,4 +1,4 @@
-import { isArray,isObject } from './object.js'
+import { isArray,isObject, isFunction } from './object.js'
 import {
   Left,
   Right
@@ -72,35 +72,41 @@ var isNothing = curry(function(str) {
 	return (str === null || str === undefined);
 });
 
-var map = curry(function(f,data) {
-	return sureReturn(data, ()=>(isExist(data && data.map) ? (data.map(f)) : (Left.of(data))));
+var map = curry(function(f, data) {
+	return sureReturn(data, ()=>(isExist(data.map) ? (data.map(f)) : (Left.of(`该值不存在map方法`))));
 });
-var reduce = curry(function(f,data) {
-	return sureReturn(data, ()=>(isExist(data && data.reduce) ? (data.reduce(f)) : (Left.of(data))));
+var reduce = curry(function(f, data) {
+	return sureReturn(data, ()=>(isExist(data.reduce) ? (data.reduce(f)) : (Left.of(`该值不存在reduce方法`))));
 });
-var match = curry(function(f,data) {
-	return sureReturn(data, ()=>(isExist(data && data.match) ? (data.match(f)) : (Left.of(data))));
+var match = curry(function(f, data) {
+	return sureReturn(data, ()=>(isExist(data.match) ? ( isFunction(f) ? (data.match(f)) : ((Left.of(`match参数不完整`)))) : (Left.of(`该值不存在match方法`))));
 });
-var then = curry(function(f,data) {
-	return sureReturn(data, ()=>(isExist(data && data.then) ? (data.then(f)) : (Left.of(data))));
+var test = curry(function(reg, data) {
+	return sureReturn(data, () => (reg.test(data)));
 });
-var filter = curry(function(f,data) {
-  return sureReturn(data, ()=>(isExist(data && data.filter) ? (data.filter(f)) : (Left.of(data))));
+var replace = curry(function(reg,f, data) {
+	return sureReturn(data, ()=>(isExist(data.replace) ? ( (isFunction(f) && isExist(reg)) ? (data.replace(reg, f)) : ((Left.of(`replace参数不完整`)))) : (Left.of(`该值不存在replace方法`))));
 });
-var split = curry(function(str,data) {
-	return sureReturn(data, ()=>(isExist(data && data.split) ? (data.split(str)) : (Left.of(data))))
+var then = curry(function(f, data) {
+	return sureReturn(data, ()=>(isExist(data.then) ? (data.then(f)) : (Left.of(`该值不存在then方法`))));
+});
+var filter = curry(function(f, data) {
+  return sureReturn(data, ()=>(isExist(data.filter) ? (data.filter(f)) : (Left.of(`该值不存在filter方法`))));
+});
+var split = curry(function(str, data) {
+	return sureReturn(data, ()=>(isExist(data.split) ? (data.split(str)) : (Left.of(`该值不存在split方法`))))
 });
 var head = curry(function(data) {
-  return isNull(data) ? (Left.of(data)) : (data[0]);
+  return isNull(`该值不存在第一个元素`) ? (Left.of(data)) : (data[0]);
 });
 var last = curry(function(data) {
-	return sureReturn(data, ()=>(isExist(data && data.slice) ? (data.slice(-1)) : (Left.of(data))))
+	return sureReturn(data, ()=>(isExist(data.slice) ? (data.slice(-1)) : (Left.of(`该值不存在最后一个元素`))))
 });
 var eq = curry(function(key,data) {
   return key == data
 });
 var join = function(data){
-	return sureReturn(data, ()=>(isExist(data && data.join) ? (data.join()) : (data)))
+	return sureReturn(data, ()=>(isExist(data && data.join) ? (data.join()) : Left.of(`该值不存在join方法`)))
 }
 var assign = curry(function(data) {
 	return sureReturn(data,()=> ( isArray(data) ? ([...data]) : (isObject(data) ? (Object.assign({},data)) : (data) ) ) )
@@ -116,7 +122,7 @@ var id = curry(function(data){
   return data;
 });
 var prop = curry(function(prop,data) {
-	return sureReturn(data,()=> data[prop] );
+	return sureReturn(data,()=> isExist(data[prop]) ? data[prop] : Left.of(`该值的${prop}属性不存在`)  );
 });
 var setProp = curry(function(prop,value,data) {
 	return sureReturn(data,()=> setStoreData(assign(data),prop,value) );
@@ -156,4 +162,6 @@ export {
 	_add,
 	reduce,
 	match,
+	replace,
+	test
 }

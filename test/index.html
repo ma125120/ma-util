@@ -9,7 +9,11 @@
   <input type="text" class="username" value="sdada">
   <input type="text" class="password" value="125120">
   <script type="module">
-    import { compose, curry, Maybe, IO,Left,Right, split,map,prop,setProp,head,last,assign,join,log,ObjectToArray,chain,id,then,ap,add,_add,match } from '../src/index.js'
+    import { compose, curry, Maybe, IO,Left,Right, split,map,prop,setProp,head,last,assign,join,log,ObjectToArray,chain,id,then,ap,add,_add,match, filter,replace,test } from '../src/index.js'
+    var testStr = compose(
+      prop('a'),  prop('b'), log, join, log
+    )({ a: { b: '234dd' } });
+
     var str = "test=213&sd=exec",
         obj = {
           color: 'red'
@@ -67,6 +71,7 @@
     compose(
       split('dsa'),log,join,log
     )('test')
+    
     
 
     // querySelector(".username").chain(function(uname) {

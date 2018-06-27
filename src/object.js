@@ -8,25 +8,26 @@ var isFunction = function(data) {
 	return Object.prototype.toString.call(data).slice(8,-1) == "Function";
 };
 
-var toArray = function(obj) {
+var toArray = function(obj, sort = true) {
   var keys = Object.keys(obj),
       arr = [];
 
   keys.map(key=>{
     if(!isNaN(+key)) {
-      arr[key] = obj[key]
+			sort ? (arr.push(obj[key])) : (arr[key] = obj[key]);
     }
-  });
+	});
   return arr;
 }
 
-// toArray({
+// var testArr = toArray({
 //   0:{
 //     s:'sdad'
 //   },
-//   1:'dsa',
+//   2:['dsa'],
 //   a:'rtest'
-// })
+// });
+// console.log(testArr)
 
 var rgbToHex = function(rgb) {
 	var str = rgb.replace(/rgb\((.+)\)/g,function(match,$1) { return $1; });

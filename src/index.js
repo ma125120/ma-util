@@ -47,6 +47,8 @@ import {
 	_add,
 	reduce,
 	match,
+	replace,
+	test,
 } from './util.js'
 
 
@@ -121,6 +123,8 @@ export {
 	_add,
 	reduce,
 	match,
+	replace,
+	test,
 
 	insertArray,
 	Maybe,
